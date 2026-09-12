@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ApexTrader India - High-performance real-time Indian stock market trading terminal and brokerage platform with live NSE/BSE quotes, interactive candlestick charts, Level 2 depth, and paper trading.">
+  <meta name="keywords" content="indian stock market, nse trading terminal, bse broker app, nifty 50 charts, paper trading india, zerodha kite alternative, reliance share price">
+  <title>ApexTrader India | NSE & BSE Institutional Broker Terminal</title>
+
+  <!-- Google Fonts: Outfit (UI), Inter (Body), JetBrains Mono (Financial Numbers) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="apex-dark">
+
+  <!-- Top Indian Market Indices Marquee Bar -->
+  <aside class="global-marquee-wrap" aria-label="Indian Market Indices">
+    <div class="marquee-tag">
+      <span class="pulse-dot"></span> NSE & BSE INDICES
+    </div>
+    <div class="marquee-track" id="market-marquee">
+      <!-- Injected by app.js -->
+    </div>
+  </aside>
+
+  <!-- Primary Header & Account Dashboard Bar -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-group">
+        <div class="brand-symbol">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+            <polyline points="16 7 22 7 22 13"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>APEX<span>TRADER</span></h1>
+          <span class="edition-tag">INDIA • NSE & BSE PRO</span>
+        </div>
+      </div>
+      <div class="market-status-pill">
+        <span class="status-indicator live"></span>
+        <span>NSE/BSE LIVE</span>
+      </div>
+    </div>
+
+    <!-- Account Overview Pill Group (INR) -->
+    <div class="header-center">
+      <div class="account-stat-card">
+        <span class="stat-title">Portfolio Net Worth</span>
+        <span class="stat-value" id="hdr-net-worth">₹10,00,000.00</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="account-stat-card">
+        <span class="stat-title">Available Margin / Cash</span>
+        <span class="stat-value highlight" id="hdr-buying-power">₹8,54,000.00</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="account-stat-card">
+        <span class="stat-title">Unrealized Day P&L</span>
+        <span class="pnl-badge up" id="hdr-day-pnl">+₹0.00 (+0.00%)</span>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <button class="btn-hdr secondary" id="btn-sound-toggle" title="Toggle sound effects">
+        🔊 Sound: ON
+      </button>
+      <button class="btn-hdr primary glow" id="btn-open-funds-modal">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add Margin / Reset
+      </button>
+      <div class="user-avatar-badge" title="NSE Pro Trader Account">
+        <span>IN</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Trading Workspace Grid -->
+  <main class="terminal-workspace">
+
+    <!-- Left Column: Watchlist & Market Screener -->
+    <aside class="sidebar-watchlist" id="watchlist-panel">
+      <div class="watchlist-header">
+        <div class="watchlist-title-row">
+          <h2>NSE Market Watchlist</h2>
+          <span class="wl-count-label">14 Equities</span>
+        </div>
+
+        <div class="search-box">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="watchlist-search" placeholder="Search NSE stocks (e.g. RELIANCE, TCS)..." autocomplete="off">
+        </div>
+
+        <div class="category-pills">
+          <button class="wl-pill active" data-filter="ALL">All</button>
+          <button class="wl-pill" data-filter="BANKING">Banking</button>
+          <button class="wl-pill" data-filter="IT">IT & Tech</button>
+          <button class="wl-pill" data-filter="AUTO">Auto</button>
+          <button class="wl-pill" data-filter="GAINERS">Gainers</button>
+          <button class="wl-pill" data-filter="LOSERS">Losers</button>
+        </div>
+      </div>
+
+      <!-- Watchlist Stock Items List -->
+      <div class="watchlist-scrollable" id="watchlist-items">
+        <!-- Injected dynamically by app.js -->
+      </div>
+    </aside>
+
+    <!-- Center Column: Primary Chart & Stock Header -->
+    <section class="main-chart-area" id="chart-panel">
+
+      <!-- Active Stock Header -->
+      <div class="active-stock-header">
+        <div class="stock-title-section">
+          <div class="stock-name-row">
+            <span class="stock-sym" id="stock-sym">RELIANCE</span>
+            <span class="stock-name" id="stock-name">Reliance Industries Ltd</span>
+            <span class="stock-badge" id="stock-sector-badge">NSE • Energy & Telecom</span>
+          </div>
+          <div class="stock-pricing-row">
+            <span class="live-price" id="stock-live-price">₹2,985.40</span>
+            <span class="header-change-badge up" id="stock-day-change">+₹31.30 (+1.06%)</span>
+          </div>
+        </div>
+
+        <!-- Metric badges in INR -->
+        <div class="stock-key-stats">
+          <div class="kstat">
+            <span class="kstat-lbl">TODAY'S HIGH</span>
+            <span class="kstat-val" id="stat-high">₹3,010.50</span>
+          </div>
+          <div class="kstat">
+            <span class="kstat-lbl">TODAY'S LOW</span>
+            <span class="kstat-val" id="stat-low">₹2,940.00</span>
+          </div>
+          <div class="kstat">
+            <span class="kstat-lbl">NSE VOLUME</span>
+            <span class="kstat-val" id="stat-volume">8.4M</span>
+          </div>
+          <div class="kstat">
+            <span class="kstat-lbl">MARKET CAP</span>
+            <span class="kstat-val" id="stat-cap">₹20.2L Cr</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart Toolbar Controls -->
+      <div class="chart-toolbar">
+        <div class="tf-group" role="group" aria-label="Timeframe Selection">
+          <button class="tf-btn active" data-tf="1D">1D</button>
+          <button class="tf-btn" data-tf="1W">1W</button>
+          <button class="tf-btn" data-tf="1M">1M</button>
+          <button class="tf-btn" data-tf="3M">3M</button>
+          <button class="tf-btn" data-tf="1Y">1Y</button>
+        </div>
+
+        <div class="chart-type-toggle">
+          <button class="type-btn active" id="btn-type-candles" title="Candlestick View">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <rect x="5" y="6" width="4" height="12" rx="1"/>
+              <line x1="7" y1="2" x2="7" y2="6" stroke="currentColor" stroke-width="2"/>
+              <line x1="7" y1="18" x2="7" y2="22" stroke="currentColor" stroke-width="2"/>
+              <rect x="15" y="3" width="4" height="15" rx="1"/>
+              <line x1="17" y1="1" x2="17" y2="3" stroke="currentColor" stroke-width="2"/>
+              <line x1="17" y1="18" x2="17" y2="23" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Candles
+          </button>
+          <button class="type-btn" id="btn-type-area" title="Area / Line View">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="22 17 13.5 8.5 8.5 13.5 2 6"></polyline>
+            </svg>
+            Line
+          </button>
+        </div>
+
+        <div class="indicators-group">
+          <button class="indicator-toggle active" data-indicator="sma" title="20-period Simple Moving Average">
+            <span class="ind-dot sma"></span> SMA (20)
+          </button>
+          <button class="indicator-toggle" data-indicator="ema" title="50-period Exponential Moving Average">
+            <span class="ind-dot ema"></span> EMA (50)
+          </button>
+          <button class="indicator-toggle active" data-indicator="volume" title="Volume Histogram">
+            <span class="ind-dot vol"></span> Volume
+          </button>
+        </div>
+
+        <!-- Dynamic OHLCV crosshair hover display -->
+        <div class="chart-ohlc-readout" id="chart-ohlc-info">
+          <span>Move cursor over candles for price action details</span>
+        </div>
+      </div>
+
+      <!-- Financial Chart Canvas Workspace -->
+      <div class="chart-canvas-wrapper" id="chart-canvas-container">
+        <!-- Canvas injected by chart-engine.js -->
+      </div>
+    </section>
+
+    <!-- Right Column: Order Terminal & Level 2 Depth -->
+    <aside class="sidebar-terminal">
+
+      <!-- Order Execution Terminal Card -->
+      <div class="terminal-card">
+        <div class="terminal-card-header">
+          <div class="order-side-tabs">
+            <button class="side-tab buy active" id="order-tab-buy">BUY</button>
+            <button class="side-tab sell" id="order-tab-sell">SELL</button>
+          </div>
+          <div class="zero-commission-pill">
+            <span>₹0 Delivery Brokerage</span>
+          </div>
+        </div>
+
+        <div class="order-form-body">
+          <!-- Order Type Selector -->
+          <div class="form-row">
+            <label for="order-type-select">Order Type (Product)</label>
+            <div class="select-wrap">
+              <select id="order-type-select">
+                <option value="MARKET">Market Order (CNC / Normal)</option>
+                <option value="LIMIT">Limit Order</option>
+                <option value="STOP">SL (Stop Loss)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Limit Price Input (Hidden when Market) -->
+          <div class="form-row" id="limit-price-row" style="display: none;">
+            <label for="order-limit-price">Limit Target (₹)</label>
+            <div class="input-with-adornment">
+              <span class="adornment">₹</span>
+              <input type="number" id="order-limit-price" step="0.05" placeholder="0.00">
+            </div>
+          </div>
+
+          <!-- Quantity / Shares Input -->
+          <div class="form-row">
+            <div class="label-with-meta">
+              <label for="order-shares-input">Quantity (Shares)</label>
+              <span class="meta-note" id="summary-shares-held">50 shares held</span>
+            </div>
+            <div class="qty-stepper-wrap">
+              <button class="qty-step-btn" id="btn-qty-minus">-</button>
+              <input type="number" id="order-shares-input" value="10" min="1" step="1">
+              <button class="qty-step-btn" id="btn-qty-plus">+</button>
+            </div>
+          </div>
+
+          <!-- Quick Allocation Percentage Buttons -->
+          <div class="quick-pct-row">
+            <button class="pct-btn" data-pct="25">25%</button>
+            <button class="pct-btn" data-pct="50">50%</button>
+            <button class="pct-btn" data-pct="75">75%</button>
+            <button class="pct-btn" data-pct="100">MAX</button>
+          </div>
+
+          <!-- Order Cost Breakdown Box -->
+          <div class="order-cost-breakdown">
+            <div class="breakdown-row">
+              <span class="b-lbl">Estimated Price</span>
+              <span class="b-val" id="summary-exec-price">₹2,985.40</span>
+            </div>
+            <div class="breakdown-row">
+              <span class="b-lbl">Brokerage & STT</span>
+              <span class="b-val free">₹0.00 (Zero Brokerage)</span>
+            </div>
+            <div class="breakdown-row">
+              <span class="b-lbl">Available Margin</span>
+              <span class="b-val" id="summary-buying-power">₹8,54,000.00</span>
+            </div>
+            <div class="breakdown-divider"></div>
+            <div class="breakdown-row total">
+              <span class="b-lbl">Estimated Total</span>
+              <span class="b-val highlight" id="summary-est-total">₹29,854.00</span>
+            </div>
+          </div>
+
+          <!-- Submit Order Button -->
+          <button class="submit-order-btn buy-btn" id="order-submit-btn">
+            Buy RELIANCE (NSE)
+          </button>
+        </div>
+      </div>
+
+      <!-- Level 2 Order Book Depth Card -->
+      <div class="orderbook-card">
+        <div class="orderbook-card-header">
+          <h3>NSE Market Depth (Level 2)</h3>
+          <span class="ob-pulse-tag">REALTIME</span>
+        </div>
+        <div class="orderbook-body" id="order-book-container">
+          <!-- Injected dynamically by order-book.js -->
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- Bottom Panel: Portfolio & Order Management Dock -->
+  <section class="bottom-dock-panel">
+    <div class="dock-header">
+      <div class="dock-tabs">
+        <button class="dock-tab active" data-target="pane-positions">
+          Open Holdings <span class="tab-count-badge" id="pos-count-badge">1</span>
+        </button>
+        <button class="dock-tab" data-target="pane-pending">
+          Pending Orders <span class="tab-count-badge" id="pending-count-badge">0</span>
+        </button>
+        <button class="dock-tab" data-target="pane-history">
+          Trade Audit Book
+        </button>
+        <button class="dock-tab" data-target="pane-analytics">
+          Asset Allocation
+        </button>
+      </div>
+    </div>
+
+    <div class="dock-content">
+      <!-- Pane: Open Positions -->
+      <div class="dock-pane active" id="pane-positions">
+        <div class="table-responsive">
+          <table class="financial-table">
+            <thead>
+              <tr>
+                <th>Stock / Exchange</th>
+                <th>Quantity</th>
+                <th>Avg Price (₹)</th>
+                <th>LTP (₹)</th>
+                <th>Current Value</th>
+                <th>P&L (Unrealized)</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="positions-tbody">
+              <!-- Injected by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pane: Pending Orders -->
+      <div class="dock-pane" id="pane-pending">
+        <div class="table-responsive">
+          <table class="financial-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Symbol</th>
+                <th>Side</th>
+                <th>Order Type</th>
+                <th>Quantity</th>
+                <th>Target Price (₹)</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="pending-tbody">
+              <!-- Injected by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pane: Trade History -->
+      <div class="dock-pane" id="pane-history">
+        <div class="table-responsive">
+          <table class="financial-table">
+            <thead>
+              <tr>
+                <th>Trade ID</th>
+                <th>Symbol</th>
+                <th>Side</th>
+                <th>Quantity</th>
+                <th>Execution Price (₹)</th>
+                <th>Turnover</th>
+                <th>Realized P&L</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="history-tbody">
+              <!-- Injected by app.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Pane: Portfolio Allocation -->
+      <div class="dock-pane" id="pane-analytics">
+        <div id="portfolio-breakdown-container">
+          <!-- Injected by app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal: Funds Deposit & Reset Account -->
+  <div class="modal-overlay" id="funds-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <h3>Trading Account Margin & Capital</h3>
+          <span class="modal-subtitle">Add simulated Indian Rupee (INR) margin or reset demo balance</span>
+        </div>
+        <button class="btn-modal-close" id="btn-close-funds-modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="deposit-section">
+          <h4>Add Paper Margin (INR)</h4>
+          <p class="section-desc">Instantly credit simulated Rupee funds to practice with higher trading capital:</p>
+          <div class="deposit-grid">
+            <button class="btn-deposit-opt" data-amount="50000">+₹50,000</button>
+            <button class="btn-deposit-opt" data-amount="100000">+₹1,00,000</button>
+            <button class="btn-deposit-opt" data-amount="200000">+₹2,00,000</button>
+            <button class="btn-deposit-opt" data-amount="500000">+₹5,00,000</button>
+          </div>
+        </div>
+
+        <div class="modal-divider"></div>
+
+        <div class="reset-section">
+          <h4>Reset Portfolio State</h4>
+          <p class="section-desc">Clear open positions, pending orders, and reset trading capital back to ₹10,00,000 (10 Lakhs INR):</p>
+          <button class="btn-danger-reset" id="btn-reset-demo-account">
+            Reset to ₹10,00,000 Demo Account
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications Anchor -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- App Core Scripts in Order -->
+  <script src="js/sound.js"></script>
+  <script src="js/market-data.js"></script>
+  <script src="js/chart-engine.js"></script>
+  <script src="js/order-book.js"></script>
+  <script src="js/trading-terminal.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
